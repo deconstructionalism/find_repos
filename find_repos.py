@@ -1,29 +1,42 @@
 import crayons
 import os
-from subprocess import Popen
 from git import Repo
+from subprocess import Popen
 
 
-dir_paths = [
-    '~/Projects',
-    '~/General Assembly'
-]
+# class FindRepos:
+#     def __init__(self, dir_paths, match_strings):
+#         self.dir_paths = dir_paths
+#         self.match_strings = match_strings
 
-ghub_origin_match_strings = [
-    'git@github.com:deconstructionalism/',
-    'git@github.com:ArjunRayGA/',
-    'git@github.com:ga-students/DS-BOS-19',
-    'git@github.com:ga-students/DS-BOS-Klaviyo',
-    'git@git.generalassemb.ly:ga-ds-bos/',
-    'https://git.generalassemb.ly/ArjunRayGA/',
-    'https://git.generalassemb.ly/ga-ds-bos/',
-    'https://git.generalassemb.ly/ga-wdi-boston/'
-]
+#     def traverse_tree(self):
+#         for search_dir in self.dir_paths:
+#             full_path = os.path.expanduser(search_dir)
+#             for path, dirs, _ in os.walk(full_path):
+#                 if '.git' in dirs:
+#                     RepoCheck(path)
+
+
+
+# class RepoCheck:
+#     def __init__(self, path):
+#         self.path = path
+#         self.repo = Repo(path)
+#         self.remote_url = self.repo.remotes.origin.url if self.repo.remotes else ''
+#         self.check_repo()
+        
+
+#     def check_repo(self):
+#         if not any([match in remote_url for match in ghub_origin_match])
+
+
 
 
 def check_repo(path):
+
     repo = Repo(path)
     remote_url =  repo.remotes.origin.url if repo.remotes else ''
+
     if not any([match in remote_url for match in ghub_origin_match_strings]):
         print crayons.yellow('\n\nNOT INCLUDED:  {}\n{}\nREPO NOT IN YOUR GITHUB ACCOUNTS!\norigin: "{}"\n'.format(path.upper(),'-' * 80, remote_url))
     else:
@@ -63,40 +76,29 @@ def check_repo(path):
             except:
                 print crayons.red('unable to check branch')
 
-#                 OK = '''On branch master
-# Your branch is up to date with 'origin/master'.
+def traverse_tree(dir_paths, match_strings):
 
-# nothing to commit, working tree clean'''
-                # print status, dir(repo)
-
-
-                # repo_dirs.append(path)
-                # repo_settings.append({
-                #     'origin': remote_url
-                # })
+    for search_dir in dir_paths:
+        for path, dirs, _ in os.walk(os.path.expanduser(search_dir)):
+            if '.git' in dirs:
+                check_repo(path)
 
 
-                # print 'git -C "{}" status'.format(path)
-                # proc = Popen(['git','status'])
-                # # result = proc.communicate()
-                # # print result
+if __name__ == '__main__':
+    dir_paths = [
+        '~/Projects',
+        '~/General Assembly'
+    ]
 
-repo_dirs = []
-repo_settings = []
-for search_dir in dir_paths:
-    for path, dirs, _ in os.walk(os.path.expanduser(search_dir)):
-        if '.git' in dirs:
-            check_repo(path)
+    ghub_origin_match_strings = [
+        'git@github.com:deconstructionalism/',
+        'git@github.com:ArjunRayGA/',
+        'git@github.com:ga-students/DS-BOS-19',
+        'git@github.com:ga-students/DS-BOS-Klaviyo',
+        'git@git.generalassemb.ly:ga-ds-bos/',
+        'https://git.generalassemb.ly/ArjunRayGA/',
+        'https://git.generalassemb.ly/ga-ds-bos/',
+        'https://git.generalassemb.ly/ga-wdi-boston/'
+    ]
 
-
-repos = (zip(repo_dirs, repo_settings))
-
-# for path, settings in repos:
-#     repo = Repo(path)
-#     git = repo.git
-#     print repo.branches
-
-
-
-# for d, s in repos:
-#     print d, s
+    traverse_tree(dir_paths, ghub_origin_match_strings)
