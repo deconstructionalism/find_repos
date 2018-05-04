@@ -17,7 +17,6 @@ from subprocess import Popen
 #                     RepoCheck(path)
 
 
-
 # class RepoCheck:
 #     def __init__(self, path):
 #         self.path = path
@@ -42,7 +41,7 @@ def check_repo(path):
     else:
         active_branch = str(repo.active_branch)
         branches = [str(b) for b in repo.branches if str(b) <> active_branch]
-        print crayons.white('\n\n{}\n{}'.format(path.upper(), '-' * 80), bold=True)
+        print(crayons.white('\n\n{}\n{}'.format(path.upper(), '-' * 80), bold=True))
         print('active branch: "{}"'.format(active_branch))
 
         if len(branches) > 0:
@@ -79,7 +78,8 @@ def check_repo(path):
 def traverse_tree(dir_paths, match_strings):
 
     for search_dir in dir_paths:
-        for path, dirs, _ in os.walk(os.path.expanduser(search_dir)):
+        full_path = os.path.expanduser(search_dir)
+        for path, dirs, _ in os.walk(full_path):
             if '.git' in dirs:
                 check_repo(path)
 
